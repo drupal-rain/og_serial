@@ -201,7 +201,3 @@ function og_serial_gc_deinitiate($group_type, $gid, $entity_type, $bundle) {
     entity_save($entity_type, $group_content);
   }
 }
-
-function og_serial_gc_new($entity) {
-  
-}

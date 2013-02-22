@@ -120,11 +120,52 @@ function og_serial_field_widget_info() {
 function og_serial_field_formatter_info() {
   return array(
     'og_serial_default' => array(
-      'label' => t('Hidden'),
+      'label' => t('OG serial default'),
       'field types' => array('og_serial'),
       'settings' => array(),
     ),
   );
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function og_serial_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = array();
+  $settings = $display['settings'];
+  switch ($display['type']) {
+    case 'og_serial_default':
+      foreach ($items as $delta => $item) {
+        $element[$delta] = array(
+          '#markup' => theme('og_serial_formatter_default', $item),
+        );
+      }
+      break;
+  }
+
+  return $element;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function og_serial_theme() {
+  // Register the theme for the default formatter.
+  return array(
+    'og_serial_formatter_default' => array(
+      'variables' => array(
+        'ogs_id' => NULL,
+        'sid' => NULL,
+      ),
+    ),
+  );
+}
+
+/**
+ * Theme function for the default formatter.
+ */
+function theme_og_serial_formatter_default($variables) {
+  return $variables['sid'];
 }
 
 /**
@@ -136,16 +177,13 @@ function og_serial_field_insert($entity_type, $entity, $field, $instance, $langc
   if ($og_context = og_context()) {
     $group_type = $og_context['group_type'];
     $gid = $og_context['gid'];
-    $counter = og_serial_ogs_get_counter(NULL, $group_type, $gid, $entity_type, $bundle);
     if (og_serial_ogs_is_installed($group_type, $gid, $entity_type, $bundle)) {
+      $ogs_id = og_serial_ogs_get_id($group_type, $gid, $entity_type, $bundle);
       $items[] = array(
         'ogs_id' => $ogs_id,
-        'sid' => $counter + 1,
+        'sid' => og_serial_ogs_get_counter($ogs_id) + 1,
       );
+      og_serial_ogs_increase_counter($ogs_id);
     }
   }
-}
-
-function og_serial_field_attach_insert($entity_type, $entity) {
-  og_serial_ogs_increase_counter($entity->{OG_SERIAL_FIELD}[$entity->language][0]);
 }
