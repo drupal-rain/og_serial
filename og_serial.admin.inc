@@ -20,6 +20,7 @@ function og_serial_admin_form($form, &$form_state) {
   $og_context = og_context();
   $group_type = $og_context['group_type'];
   $gid = $og_context['gid'];
+  og_set_breadcrumb($group_type, $gid, array(l(t('Group'), "$group_type/$gid/group")));
   $entity_info = entity_get_info();
   $form['group_content'] = array(
     '#type' => 'container',
@@ -65,10 +66,13 @@ function og_serial_admin_form_submit(&$form, &$form_state) {
   foreach ($group_content as $entity_type => $bundles) {
     foreach ($bundles['bundles'] as $bundle => $status) {
       // Install
+      // @todo Sucess, fail message.
+      // @todo Queue for long process task.
       if ($status && !og_serial_ogs_is_installed($group_type, $gid, $entity_type, $bundle)) {
         og_serial_ogs_install($group_type, $gid, $entity_type, $bundle);
       }
       // Uninstall
+      // @todo Confirm step.
       if (!$status && og_serial_ogs_is_installed($group_type, $gid, $entity_type, $bundle)) {
         og_serial_ogs_uninstall($group_type, $gid, $entity_type, $bundle);
       }

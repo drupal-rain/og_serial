@@ -201,3 +201,10 @@ function og_serial_gc_deinitiate($group_type, $gid, $entity_type, $bundle) {
     entity_save($entity_type, $group_content);
   }
 }
+
+/**
+ * Theme function for the default formatter.
+ */
+function theme_og_serial_formatter_default($variables) {
+  return $variables['sid'];
+}

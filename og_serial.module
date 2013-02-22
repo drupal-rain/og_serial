@@ -147,6 +147,17 @@ function og_serial_field_formatter_view($entity_type, $entity, $field, $instance
 }
 
 /**
+ * Implements hook_field_is_empty().
+ */
+function og_serial_field_is_empty($item, $field) {
+  if (!empty($item['ogs_id'])) {
+    return FALSE;
+  }
+
+  return TRUE;
+}
+
+/**
  * Implements hook_theme().
  */
 function og_serial_theme() {
@@ -159,13 +170,6 @@ function og_serial_theme() {
       ),
     ),
   );
-}
-
-/**
- * Theme function for the default formatter.
- */
-function theme_og_serial_formatter_default($variables) {
-  return $variables['sid'];
 }
 
 /**
