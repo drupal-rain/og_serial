@@ -1,0 +1,8 @@
+name = OG Serial
+description = "Serial field for group content of a specific group."
+package = "Organic groups"
+core = 7.x
+version = 7.x-1.x-dev
+
+dependencies[] = og
+dependencies[] = og_context

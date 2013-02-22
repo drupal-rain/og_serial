@@ -1,0 +1,93 @@
+<?php
+
+/**
+ * @file
+ * Install file.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function og_serial_schema() {
+  $schema['og_serial'] = array(
+    'description' => t('Counter of serial number for group.'),
+    'fields' => array(
+      'id' => array(
+        'description' => 'Primary Key: Unique OG serial ID.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'group_type' => array(
+        'description' => "The group's entity type.",
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'gid' => array(
+        'description' => "The group's unique ID.",
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+      'entity_type' => array(
+        'description' => "The group content's entity type.",
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'bundle' => array(
+        'description' => "The group content's bundle.",
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'counter' => array(
+        'description' => 'Counter number.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('id'),
+    'unique keys' => array(
+      'group_content' => array(
+        'group_type',
+        'gid',
+        'entity_type',
+        'bundle',
+       ),
+    ),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements hook_field_schema().
+ */
+function og_serial_field_schema($field) {
+  if ($field['type'] == 'og_serial') {
+    $columns = array(
+      'ogs_id' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'sid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'sortable' => TRUE,
+        'views' => TRUE,
+        'index' => TRUE,
+      ),
+    );
+  }
+
+  return array(
+    'columns' => $columns,
+  );
+}
