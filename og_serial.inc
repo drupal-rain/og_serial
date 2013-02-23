@@ -172,8 +172,8 @@ function og_serial_gc_list($membership_type, $group_type, $gid, $entity_type, $b
 function og_serial_gc_initiate($group_type, $gid, $entity_type, $bundle) {
   // 1. Find all the group content of the group.
   // @todo Support other membership type?
-  $group_contents = og_serial_gc_list(OG_MEMBERSHIP_TYPE_DEFAULT, $group_type, $gid, $entity_type, $bundle);
   $ogs_id = og_serial_ogs_get_id($group_type, $gid, $entity_type, $bundle);
+  $group_contents = og_serial_gc_list(OG_MEMBERSHIP_TYPE_DEFAULT, $group_type, $gid, $entity_type, $bundle);
   // 2. Insert the serial number to og_serial field.
   foreach ($group_contents as $group_content) {
     $group_content->{OG_SERIAL_FIELD}[$group_content->language][0] = array(

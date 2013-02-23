@@ -40,20 +40,32 @@ function og_serial_token_info_alter(&$info) {
  */
 function og_serial_tokens($type, $tokens, array $data = array(), array $options = array()) {
   $replacements = array();
+  // @todo Support other than 'node'.
   if ($type == 'node' && !empty($data['node'])) {
     $node = $data['node'];
     $language = entity_language('node', $node);
+    if (!isset($node->nid)) {
+      $og_context = og_context();
+      $group_type = $og_context['group_type'];
+      $gid = $og_context['gid'];
+      $ogs_id = og_serial_ogs_get_id($group_type, $gid, 'node', $node->type);
+      $sid = og_serial_ogs_get_counter($ogs_id) + 1;
+    }
+    else {
+      $ogs_id = $node->og_serial[$language][0]['ogs_id'];
+      $sid = $node->og_serial[$language][0]['sid'];
+    }
     foreach ($tokens as $name => $original) {
       switch ($name) {
         case 'og_serial':
           // @todo Better information?
-          $replacements[$original] = $node->og_serial[$language][0]['sid'];
+          $replacements[$original] = $sid;
           break;
         case 'og_serial:ogs_id':
-          $replacements[$original] = $node->og_serial[$language][0]['ogs_id'];
+          $replacements[$original] = $ogs_id;
           break;
         case 'og_serial:sid':
-          $replacements[$original] = $node->og_serial[$language][0]['sid'];
+          $replacements[$original] = $sid;
           break;
       }
     }
