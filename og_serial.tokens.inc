@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Token function for og_serial.
+ */
+
+/**
  * Implements hook_token_info().
  */
 function og_serial_token_info() {
