@@ -158,21 +158,6 @@ function og_serial_field_is_empty($item, $field) {
 }
 
 /**
- * Implements hook_theme().
- */
-function og_serial_theme() {
-  // Register the theme for the default formatter.
-  return array(
-    'og_serial_formatter_default' => array(
-      'variables' => array(
-        'ogs_id' => NULL,
-        'sid' => NULL,
-      ),
-    ),
-  );
-}
-
-/**
  * Implements hook_field_insert().
  */
 function og_serial_field_insert($entity_type, $entity, $field, $instance, $langcode, &$items) {
@@ -190,4 +175,19 @@ function og_serial_field_insert($entity_type, $entity, $field, $instance, $langc
       og_serial_ogs_increase_counter($ogs_id);
     }
   }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function og_serial_theme() {
+  // Register the theme for the default formatter.
+  return array(
+    'og_serial_formatter_default' => array(
+      'variables' => array(
+        'ogs_id' => NULL,
+        'sid' => NULL,
+      ),
+    ),
+  );
 }

@@ -44,8 +44,8 @@ function og_serial_ogs_uninstall($group_type, $gid, $entity_type, $bundle) {
     ->execute();
   // @todo Only delete the field if no implementation of this group content bundle.
   // Use cron for garbage collection?
-    // Deinitiate for the existing group content.
-    og_serial_gc_deinitiate($group_type, $gid, $entity_type, $bundle);
+  // Deinitiate for the existing group content.
+  og_serial_gc_deinitiate($group_type, $gid, $entity_type, $bundle);
 }
 
 /**
