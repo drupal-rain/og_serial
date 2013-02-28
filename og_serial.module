@@ -5,7 +5,7 @@
  * Drupal hook module system.
  */
 
-require_once 'og_serial.inc';
+include_once 'og_serial.inc';
 
 /**
  * OG Serial default field name.

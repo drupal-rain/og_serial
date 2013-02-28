@@ -1,6 +1,6 @@
 OG Serial
 ---------
-Serial number solution for og audience.
+Serial number solution for og member/content in per group level.
 
 Features
 * Setting for each group.
