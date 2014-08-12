@@ -158,17 +158,38 @@ function og_serial_field_is_empty($item, $field) {
 }
 
 /**
- * Implements hook_field_insert().
+ * Implements hook_theme().
  */
-function og_serial_field_insert($entity_type, $entity, $field, $instance, $langcode, &$items) {
-  list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
-  // @todo Support multiple group assign situation.
-  if ($og_context = og_context()) {
-    $group_type = $og_context['group_type'];
-    $gid = $og_context['gid'];
+function og_serial_theme() {
+  // Register the theme for the default formatter.
+  return array(
+    'og_serial_formatter_default' => array(
+      'variables' => array(
+        'ogs_id' => NULL,
+        'sid' => NULL,
+      ),
+    ),
+  );
+}
+
+// -----------------------------------------------------------------------------
+// Correctly insert/update og_serial field in many situations.
+
+/**
+ * @implements hook_og_membership_presave().
+ */
+function og_serial_og_membership_presave(OgMembership $og_membership) {
+  // Being insert.
+  if ($og_membership->is_new) {
+    $entity = $og_membership->entity;
+    $entity_type = $og_membership->entity_type;
+    list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
+    $group_type = $og_membership->group_type;
+    $gid = $og_membership->gid;
     if (og_serial_ogs_is_installed($group_type, $gid, $entity_type, $bundle)) {
       $ogs_id = og_serial_ogs_get_id($group_type, $gid, $entity_type, $bundle);
-      $items[] = array(
+      $language = entity_language($entity_type, $entity);
+      $entity->og_serial[$language][] = array(
         'ogs_id' => $ogs_id,
         'sid' => og_serial_ogs_get_counter($ogs_id) + 1,
       );
@@ -198,19 +219,4 @@ function og_serial_field_update($entity_type, $entity, $field, $instance, $langc
       og_serial_ogs_increase_counter($ogs_id);
     }
   }
-}
-
-/**
- * Implements hook_theme().
- */
-function og_serial_theme() {
-  // Register the theme for the default formatter.
-  return array(
-    'og_serial_formatter_default' => array(
-      'variables' => array(
-        'ogs_id' => NULL,
-        'sid' => NULL,
-      ),
-    ),
-  );
 }
