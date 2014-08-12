@@ -46,7 +46,7 @@ function og_serial_token_info_alter(&$info) {
 function og_serial_tokens($type, $tokens, array $data = array(), array $options = array()) {
   $replacements = array();
   // @todo Support other than 'node'.
-  if ($type == 'node' && !empty($data['node'])) {
+  if ($type == 'node' && !empty($data['node']) && isset($data['node']->og_serial)) {
     $node = $data['node'];
     $language = entity_language('node', $node);
     if (!isset($node->nid)) {

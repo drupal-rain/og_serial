@@ -178,6 +178,29 @@ function og_serial_field_insert($entity_type, $entity, $field, $instance, $langc
 }
 
 /**
+ * Implements hook_field_update().
+ */
+function og_serial_field_update($entity_type, $entity, $field, $instance, $langcode, &$items) {
+  list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
+  if ($og_context = og_context()) {
+    $group_type = $og_context['group_type'];
+    $gid = $og_context['gid'];
+    // If there is no serial yet.
+    if (
+      og_serial_ogs_is_installed($group_type, $gid, $entity_type, $bundle)
+      && count($items) == 0
+    ) {
+      $ogs_id = og_serial_ogs_get_id($group_type, $gid, $entity_type, $bundle);
+      $items[] = array(
+        'ogs_id' => $ogs_id,
+        'sid' => og_serial_ogs_get_counter($ogs_id) + 1,
+      );
+      og_serial_ogs_increase_counter($ogs_id);
+    }
+  }
+}
+
+/**
  * Implements hook_theme().
  */
 function og_serial_theme() {
