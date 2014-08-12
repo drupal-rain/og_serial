@@ -180,6 +180,7 @@ function og_serial_theme() {
  */
 function og_serial_og_membership_presave(OgMembership $og_membership) {
   // Being insert.
+  // Group is being changed.
   if ($og_membership->is_new) {
     $entity = $og_membership->entity;
     $entity_type = $og_membership->entity_type;
@@ -189,30 +190,7 @@ function og_serial_og_membership_presave(OgMembership $og_membership) {
     if (og_serial_ogs_is_installed($group_type, $gid, $entity_type, $bundle)) {
       $ogs_id = og_serial_ogs_get_id($group_type, $gid, $entity_type, $bundle);
       $language = entity_language($entity_type, $entity);
-      $entity->og_serial[$language][] = array(
-        'ogs_id' => $ogs_id,
-        'sid' => og_serial_ogs_get_counter($ogs_id) + 1,
-      );
-      og_serial_ogs_increase_counter($ogs_id);
-    }
-  }
-}
-
-/**
- * Implements hook_field_update().
- */
-function og_serial_field_update($entity_type, $entity, $field, $instance, $langcode, &$items) {
-  list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
-  if ($og_context = og_context()) {
-    $group_type = $og_context['group_type'];
-    $gid = $og_context['gid'];
-    // If there is no serial yet.
-    if (
-      og_serial_ogs_is_installed($group_type, $gid, $entity_type, $bundle)
-      && count($items) == 0
-    ) {
-      $ogs_id = og_serial_ogs_get_id($group_type, $gid, $entity_type, $bundle);
-      $items[] = array(
+      $entity->og_serial[$language][0] = array(
         'ogs_id' => $ogs_id,
         'sid' => og_serial_ogs_get_counter($ogs_id) + 1,
       );
