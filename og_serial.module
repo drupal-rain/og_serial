@@ -174,6 +174,8 @@ function og_serial_theme() {
 
 // -----------------------------------------------------------------------------
 // Correctly insert/update og_serial field in many situations.
+// Best practice: Do not change the group after created, current mechanism is
+// abandon the old serial id and assign new, so if you don't mind the id gap.
 
 /**
  * @implements hook_og_membership_presave().
